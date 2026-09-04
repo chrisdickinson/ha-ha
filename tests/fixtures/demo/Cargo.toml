@@ -1,0 +1,9 @@
+[package]
+name = "demo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+# Standalone: not a member of the ha-ha workspace.
+[workspace]

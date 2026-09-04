@@ -1,0 +1,65 @@
+# ha-ha.toml — boundary nominations
+#
+# Each [[boundary]] names an interface the compiler can't see as one: the
+# ha-ha. Tool 1 (`ha-ha extract`) turns each into a snapshot; tool 2
+# (`ha-ha check`) diffs snapshots and runs these rules against the delta.
+
+[[boundary]]
+id = "storage-domain"
+description = "Repository trait consumed by the domain layer"
+
+  # Shape comes from a language server — the uniform, thin-adapter path.
+  [boundary.source]
+  kind = "lsp"
+  server = "rust-analyzer"
+  root = "crates/app"
+
+  # The interface itself: anchor symbols, resolved via documentSymbol.
+  # Members of `Repository` become the interface surface.
+  [[boundary.target]]
+  file = "crates/app/src/storage/mod.rs"
+  symbol = "Repository"
+
+  # Which files are which side — only consulted for lazy usage expansion.
+  [boundary.sides]
+  provider = ["crates/app/src/storage/**"]
+  consumer = ["crates/app/src/domain/**"]
+
+  # --- rules ---
+
+  # Deterministic gate: removing a member is a hard breaking change.
+  [[boundary.rule]]
+  id = "no-member-removed"
+  kind = "gate"
+  when = "member.removed"
+  severity = "error"
+
+  # Deterministic signal → nondeterministic judgment (the Potter Stewart rule).
+  # "grew" is computable; "too large / should reuse" is the LLM's call.
+  [[boundary.rule]]
+  id = "keep-it-small"
+  kind = "judge"
+  when = "interface.grew"
+  signals = ["member.count", "member.added", "distinct_return_types"]
+  prompt = """
+  This boundary is meant to stay small. It grew. Is the addition earning
+  its place, or is there an existing member a caller could reuse? Flag
+  redundant or overly-specific additions.
+  """
+
+  # Lazy usage expansion: only when a signature changes do we go look at
+  # call sites — no standing call graph.
+  [[boundary.rule]]
+  id = "usage-on-change"
+  kind = "judge"
+  when = "member.signature_changed"
+  prompt = """
+  A member's signature changed. Inspect the call sites on both sides. Do
+  any callers now do work that belongs behind the interface — e.g. a
+  loop around a single-item call where a batch call would fit?
+  """
+
+    [boundary.rule.expand]
+    sides = ["provider", "consumer"]
+    each = "references"
+    context_lines = 4

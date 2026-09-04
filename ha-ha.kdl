@@ -1,0 +1,30 @@
+boundaries "rust" "path/to/project" {
+  source "crate::storage" {
+    rule "size" {
+      prompt """
+        Prefer keeping the interface small: reuse methods where possible.
+      """
+    }
+
+    rule "nomenclature" {
+      prompt """
+        Export free functions named `<verb>_<foo>`. Prefer bulk operations to singular operations.
+
+        New singular operations (`get_foo`) should be implemented in terms of a peer bulk operation (`list_foos`.)
+      """
+    }
+  }
+
+  source "crate::domain::tasks" {
+    rule "count" {
+      prompt "Keep an eye on the number of tasks. If we start to exceed 8 or so, ask: can we abstract over these and unify?"
+    }
+  }
+}
+
+boundaries "openapi" "path/to/openapi.json" {
+  source ""
+}
+
+boundaries "sqlx" "path/to/sqlx" {
+}
