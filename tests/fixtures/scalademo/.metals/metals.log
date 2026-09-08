@@ -1,0 +1,227 @@
+2026.09.02 23:39:02 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.02 23:39:02 INFO  Memory monitor started[0m
+2026.09.02 23:39:02 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.02 23:42:02 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:02 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.02 23:42:02 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.02 23:42:02 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:06 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:07 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:07 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:07 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:07 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:07 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:07 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:07 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:42:07 INFO  Shutting down server[0m
+2026.09.02 23:42:07 INFO  Memory monitor stopped[0m
+2026.09.02 23:42:07 INFO  shutting down Metals[0m
+2026.09.02 23:42:07 INFO  Exiting server[0m
+2026.09.02 23:42:55 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.02 23:42:55 INFO  Memory monitor started[0m
+2026.09.02 23:42:56 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.02 23:45:55 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:55 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.02 23:45:55 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.02 23:45:56 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:56 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:56 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:57 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:57 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:57 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:57 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:57 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:57 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:45:57 INFO  Shutting down server[0m
+2026.09.02 23:45:57 INFO  Memory monitor stopped[0m
+2026.09.02 23:45:57 INFO  shutting down Metals[0m
+2026.09.02 23:45:57 INFO  Exiting server[0m
+2026.09.02 23:46:12 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.02 23:46:12 INFO  Memory monitor started[0m
+2026.09.02 23:46:12 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.02 23:49:12 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:49:12 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.02 23:49:12 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:49:13 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:49:13 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:49:13 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:49:13 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:49:13 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:49:13 INFO  Shutting down server[0m
+2026.09.02 23:49:13 INFO  Memory monitor stopped[0m
+2026.09.02 23:49:13 INFO  shutting down Metals[0m
+2026.09.02 23:49:13 INFO  Exiting server[0m
+2026.09.02 23:49:43 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.02 23:49:43 INFO  Memory monitor started[0m
+2026.09.02 23:49:43 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.02 23:52:43 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:43 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.02 23:52:43 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.02 23:52:43 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:44 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:44 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:44 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:44 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:44 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:44 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:44 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:44 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:52:44 INFO  Shutting down server[0m
+2026.09.02 23:52:44 INFO  Memory monitor stopped[0m
+2026.09.02 23:52:44 INFO  shutting down Metals[0m
+2026.09.02 23:52:44 INFO  Exiting server[0m
+2026.09.02 23:56:03 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.02 23:56:03 INFO  Memory monitor started[0m
+2026.09.02 23:56:04 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.02 23:59:03 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:03 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.02 23:59:03 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.02 23:59:03 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:04 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:03 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:04 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:04 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:04 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:04 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:04 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:04 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.02 23:59:04 INFO  Shutting down server[0m
+2026.09.02 23:59:04 INFO  Memory monitor stopped[0m
+2026.09.02 23:59:04 INFO  shutting down Metals[0m
+2026.09.02 23:59:04 INFO  Exiting server[0m
+2026.09.03 00:05:32 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 00:05:32 INFO  Memory monitor started[0m
+2026.09.03 00:05:32 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 00:08:32 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:32 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.03 00:08:32 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.03 00:08:32 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:33 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:32 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:32 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:33 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:33 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:33 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:33 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:33 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:08:33 INFO  Shutting down server[0m
+2026.09.03 00:08:33 INFO  Memory monitor stopped[0m
+2026.09.03 00:08:33 INFO  shutting down Metals[0m
+2026.09.03 00:08:33 INFO  Exiting server[0m
+2026.09.03 00:08:35 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 00:08:35 INFO  Memory monitor started[0m
+2026.09.03 00:08:35 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 00:12:50 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 00:12:50 INFO  Memory monitor started[0m
+2026.09.03 00:12:50 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 00:16:50 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:16:50 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.03 00:16:50 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.03 00:16:50 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:16:51 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:16:50 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:16:51 INFO  Shutting down server[0m
+2026.09.03 00:16:51 INFO  Memory monitor stopped[0m
+2026.09.03 00:16:51 INFO  shutting down Metals[0m
+2026.09.03 00:16:51 INFO  Exiting server[0m
+2026.09.03 00:16:52 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 00:16:52 INFO  Memory monitor started[0m
+2026.09.03 00:16:53 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 00:20:52 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:52 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.03 00:20:52 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.03 00:20:52 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:53 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:52 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:53 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:53 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:53 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:53 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:53 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:53 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:20:53 INFO  Shutting down server[0m
+2026.09.03 00:20:53 INFO  Memory monitor stopped[0m
+2026.09.03 00:20:53 INFO  shutting down Metals[0m
+2026.09.03 00:20:53 INFO  Exiting server[0m
+2026.09.03 00:20:55 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 00:20:55 INFO  Memory monitor started[0m
+2026.09.03 00:20:56 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 00:22:58 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 00:22:58 INFO  Memory monitor started[0m
+2026.09.03 00:22:59 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 00:27:58 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:58 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.03 00:27:58 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.03 00:27:58 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:59 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:58 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:59 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:59 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:59 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:59 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:59 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:59 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:27:59 INFO  Shutting down server[0m
+2026.09.03 00:27:59 INFO  Memory monitor stopped[0m
+2026.09.03 00:27:59 INFO  shutting down Metals[0m
+2026.09.03 00:27:59 INFO  Exiting server[0m
+2026.09.03 00:28:01 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 00:28:01 INFO  Memory monitor started[0m
+2026.09.03 00:28:02 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 00:33:01 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:01 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.03 00:33:01 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.03 00:33:01 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:02 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:01 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:01 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:02 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:02 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:02 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:02 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:02 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 00:33:02 INFO  Shutting down server[0m
+2026.09.03 00:33:02 INFO  Memory monitor stopped[0m
+2026.09.03 00:33:02 INFO  shutting down Metals[0m
+2026.09.03 00:33:02 INFO  Exiting server[0m
+2026.09.03 22:31:08 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 22:31:08 INFO  Memory monitor started[0m
+2026.09.03 22:31:09 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 22:36:08 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:36:08 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.03 22:36:08 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.03 22:36:08 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:36:09 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:36:08 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:36:09 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:36:09 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:36:09 INFO  Shutting down server[0m
+2026.09.03 22:36:09 INFO  Memory monitor stopped[0m
+2026.09.03 22:36:09 INFO  shutting down Metals[0m
+2026.09.03 22:36:09 INFO  Exiting server[0m
+2026.09.03 22:36:11 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 22:36:11 INFO  Memory monitor started[0m
+2026.09.03 22:36:11 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 22:41:11 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:41:11 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.03 22:41:11 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.03 22:41:11 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:41:12 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:41:11 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:41:11 INFO  Shutting down server[0m
+2026.09.03 22:41:11 INFO  Memory monitor stopped[0m
+2026.09.03 22:41:11 INFO  shutting down Metals[0m
+2026.09.03 22:41:12 INFO  Exiting server[0m
+2026.09.03 22:41:13 INFO  Started: Metals version 1.6.7 in folders '/Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo' .[0m
+2026.09.03 22:41:13 INFO  Memory monitor started[0m
+2026.09.03 22:41:13 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.[0m
+2026.09.03 22:46:13 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:46:13 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Pool.scala[0m
+2026.09.03 22:46:13 WARN  no build target for: /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala[0m
+2026.09.03 22:46:13 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:46:14 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:46:13 INFO  no build target found for /Users/chris/projects/personal/ha-ha/tests/fixtures/scalademo/src/main/scala/storage/Repository.scala. Using presentation compiler with project's scala-library version: 3.3.7[0m
+2026.09.03 22:46:13 INFO  Shutting down server[0m
+2026.09.03 22:46:13 INFO  Memory monitor stopped[0m
+2026.09.03 22:46:13 INFO  shutting down Metals[0m
+2026.09.03 22:46:14 INFO  Exiting server[0m

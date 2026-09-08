@@ -1,30 +1,65 @@
-boundaries "rust" "path/to/project" {
-  source "crate::storage" {
-    rule "size" {
+// ha-ha.kdl — boundary nominations.
+//
+// Each `boundary` names an interface the compiler can't see as one: the ha-ha.
+// Tool 1 (`ha-ha extract`) turns each into a snapshot; tool 2 (`ha-ha check`)
+// will diff snapshots and run these rules against the delta.
+//
+// Boundaries nest under a `project` because that is the unit a language server
+// serves. One server is spawned per project and reused across every boundary
+// beneath it — for a slow server like metals, that is the difference between
+// one four-minute startup and one per boundary.
+//
+//   ha-ha extract --config ha-ha.kdl --pretty
+
+project "rust" "tests/fixtures/demo" {
+  boundary "storage-domain" target="src/storage/mod.rs#Repository" {
+    description "Repository trait consumed by the domain layer"
+
+    // Which files are which side. Only consulted for lazy usage expansion.
+    provider "src/storage/**"
+    consumer "src/domain/**"
+
+    // Deterministic signal → nondeterministic judgment. "grew" is computable;
+    // "too large / should reuse" is the model's call.
+    rule "keep-it-small" when="interface.grew" signals="member.count member.added" {
       prompt """
-        Prefer keeping the interface small: reuse methods where possible.
-      """
+        This boundary is meant to stay small. It grew. Is the addition earning
+        its place, or is there an existing member a caller could reuse? Flag
+        redundant or overly-specific additions.
+        """
     }
+
+    // Lazy usage expansion: only when a signature changes do we go look at
+    // call sites — there is no standing call graph.
+    rule "usage-on-change" when="member.signature_changed" {
+      expand sides="provider consumer" context-lines=4
+      prompt """
+        A member's signature changed. Inspect the call sites on both sides. Do
+        any callers now do work that belongs behind the interface — e.g. a loop
+        around a single-item call where a batch call would fit?
+        """
+    }
+  }
+
+  // A second boundary in the same project: same server, no second startup.
+  boundary "storage-types" target="src/storage/mod.rs#User" {
+    description "The record the boundary hands across"
 
     rule "nomenclature" {
       prompt """
-        Export free functions named `<verb>_<foo>`. Prefer bulk operations to singular operations.
-
-        New singular operations (`get_foo`) should be implemented in terms of a peer bulk operation (`list_foos`.)
-      """
+        Export free functions named `<verb>_<foo>`. Prefer bulk operations to
+        singular ones: a new `get_foo` should be implemented in terms of a peer
+        `list_foos`.
+        """
     }
   }
+}
 
-  source "crate::domain::tasks" {
+// A different language is a different project, and a different server.
+project "go" "tests/fixtures/godemo" {
+  boundary "go-storage" target="storage#Repository" {
     rule "count" {
-      prompt "Keep an eye on the number of tasks. If we start to exceed 8 or so, ask: can we abstract over these and unify?"
+      prompt "If this exceeds 8 or so members, ask: can we abstract over these and unify?"
     }
   }
-}
-
-boundaries "openapi" "path/to/openapi.json" {
-  source ""
-}
-
-boundaries "sqlx" "path/to/sqlx" {
 }

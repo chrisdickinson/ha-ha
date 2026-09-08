@@ -1,0 +1,25 @@
+{
+  "name": "ha-ha",
+  "owner": {
+    "name": "Chris Dickinson",
+    "email": "chris@neversaw.us"
+  },
+  "metadata": {
+    "description": "Boundary nomination: name the interfaces the compiler can't see as one unit, track how they change, and check changes against deterministic and LLM-judged rules.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "ha-ha",
+      "source": "./",
+      "description": "Skills for writing ha-ha.kdl nomination files and for choosing which interfaces are worth nominating.",
+      "keywords": [
+        "ha-ha",
+        "kdl",
+        "boundary",
+        "interface",
+        "architecture"
+      ]
+    }
+  ]
+}

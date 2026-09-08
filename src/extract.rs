@@ -28,6 +28,25 @@ pub struct Options {
     pub timeout: Duration,
 }
 
+/// The per-boundary knobs — everything in [`Options`] that is *not* fixed by
+/// the language server the session already spawned.
+#[derive(Debug, Clone)]
+pub struct Shape {
+    pub public_only: bool,
+    pub depth: usize,
+    pub timeout: Duration,
+}
+
+impl Default for Shape {
+    fn default() -> Self {
+        Shape {
+            public_only: false,
+            depth: usize::MAX,
+            timeout: Duration::from_secs(60),
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Nomination
 // ---------------------------------------------------------------------------
@@ -56,138 +75,235 @@ pub fn parse_nomination(s: &str) -> Nomination {
     }
 }
 
+
+// ---------------------------------------------------------------------------
+// Session — one language server, many boundaries
+// ---------------------------------------------------------------------------
+
+/// A language server held open across every boundary in a project.
+///
+/// Spawning and indexing is the expensive part — minutes, for metals — and the
+/// cost is per *project*, not per boundary. Keeping one client alive across a
+/// project's boundaries is the whole reason `ha-ha.kdl` nests them under it.
+pub struct Session {
+    client: Client,
+    lang: &'static Lang,
+    project: PathBuf,
+    /// Files already opened on the server, with what we read off them. Two
+    /// boundaries in one file pay for `didOpen` and `documentSymbol` once.
+    files: BTreeMap<PathBuf, FileInfo>,
+}
+
+struct FileInfo {
+    lines: Vec<String>,
+    syms: Vec<Sym>,
+}
+
+impl Session {
+    /// Spawn and initialize the server for `project`.
+    ///
+    /// `server` names an adapter outright; `hint` is a target path to infer one
+    /// from when it doesn't. The CLI has a path and no name; a config file has
+    /// a name and many paths.
+    pub fn open(
+        project: &Path,
+        server: Option<&str>,
+        hint: Option<&Path>,
+        timeout: Duration,
+    ) -> Result<Session> {
+        let project = std::fs::canonicalize(project)
+            .map_err(|e| format!("bad project path {}: {e}", project.display()))?;
+
+        let lang = pick_lang(server, &project, hint)?;
+        let binary = lang::resolve_server(lang, &project).ok_or_else(|| {
+            format!(
+                "`{}` not found on PATH — install it with: {}",
+                lang.argv[0], lang.install
+            )
+        })?;
+        let mut argv: Vec<String> = lang.argv.iter().map(|s| s.to_string()).collect();
+        argv[0] = binary.to_string_lossy().into_owned();
+
+        let mut client = Client::spawn(&argv, &project)?;
+        client.initialize(&project, timeout)?;
+        client.wait_ready(timeout);
+
+        Ok(Session {
+            client,
+            lang,
+            project,
+            files: BTreeMap::new(),
+        })
+    }
+
+    /// Extract one boundary.
+    ///
+    /// `id` becomes `Snapshot.boundary`, the diff key. Without one the
+    /// nomination's path stands in, which is what a bare CLI run reports.
+    pub fn snapshot(
+        &mut self,
+        nomination: &str,
+        id: Option<&str>,
+        shape: &Shape,
+    ) -> Result<Snapshot> {
+        let nom = parse_nomination(nomination);
+        let target_path = {
+            let p = Path::new(&nom.path);
+            if p.is_absolute() {
+                p.to_path_buf()
+            } else {
+                self.project.join(p)
+            }
+        };
+
+        let files = lang::files_for(self.lang, &target_path)?;
+        for file in &files {
+            self.load(file, shape.timeout)?;
+        }
+        let trees: Vec<(PathBuf, Vec<Sym>)> = files
+            .iter()
+            .map(|f| (f.clone(), self.files[f].syms.clone()))
+            .collect();
+
+        // Pick the surface: a named target's children, or the files' top level.
+        let mut surface: Vec<(PathBuf, String, Vec<Sym>)> = Vec::new();
+        if nom.symbol.is_empty() {
+            for (file, syms) in trees {
+                surface.push((file, String::new(), syms));
+            }
+        } else {
+            let mut found = false;
+            // The target's surface is the union over everything matching the path:
+            // in Rust a type's interface is its declaration *and* its impl blocks,
+            // which documentSymbol reports as siblings.
+            let parent = nom.symbol[..nom.symbol.len() - 1].join("::");
+            for (file, syms) in &trees {
+                let mut matches = Vec::new();
+                find_matches(syms, &nom.symbol, &mut matches);
+                if matches.is_empty() {
+                    continue;
+                }
+                found = true;
+                let children: Vec<Sym> = matches.iter().flat_map(|m| m.children.clone()).collect();
+                if children.is_empty() {
+                    // A leaf target is its own surface, qualified by its parent.
+                    let leaves: Vec<Sym> = matches
+                        .iter()
+                        .filter(|m| !is_transparent(m.kind))
+                        .map(|m| (*m).clone())
+                        .collect();
+                    surface.push((file.clone(), parent.clone(), leaves));
+                } else {
+                    surface.push((file.clone(), nom.symbol.join("::"), children));
+                }
+            }
+            if !found {
+                return Err(format!(
+                    "symbol `{}` not found in {}",
+                    nom.symbol.join("::"),
+                    display_files(&files, &self.project)
+                )
+                .into());
+            }
+        }
+
+        let project = self.project.clone();
+        let lang = self.lang;
+        let mut members = Vec::new();
+        for (file, prefix, syms) in &surface {
+            let lines = self.files.get(file).map(|f| f.lines.clone()).unwrap_or_default();
+            collect(
+                &mut self.client, lang, file, &project, &lines, syms, prefix, shape, 1, None,
+                false, &mut members,
+            )?;
+        }
+
+        members.sort_by(|a, b| a.id.cmp(&b.id));
+        warn_on_duplicate_ids(&members);
+        if shape.public_only {
+            members.retain(|m| m.visibility != Some(Visibility::Private));
+        }
+
+        let metrics = metrics(&members);
+        Ok(Snapshot {
+            schema: SNAPSHOT_SCHEMA.to_string(),
+            boundary: id.unwrap_or(&nom.path).to_string(),
+            target: nomination.to_string(),
+            revision: revision(&project),
+            generated_at: now_rfc3339(),
+            source: SourceInfo {
+                kind: "lsp".into(),
+                server: lang.argv[0].to_string(),
+            },
+            members,
+            metrics,
+        })
+    }
+
+    /// Open a file on the server and read its symbols, once per session.
+    fn load(&mut self, file: &Path, timeout: Duration) -> Result<()> {
+        if self.files.contains_key(file) {
+            return Ok(());
+        }
+        self.client.did_open(file, self.lang.language_id)?;
+        let raw = self.client.document_symbol(file, timeout)?;
+        let text = std::fs::read_to_string(file).unwrap_or_default();
+        self.files.insert(
+            file.to_path_buf(),
+            FileInfo {
+                lines: text.lines().map(str::to_string).collect(),
+                syms: parse_symbols(&raw),
+            },
+        );
+        Ok(())
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Driver
 // ---------------------------------------------------------------------------
 
+/// One-shot: a session for a single boundary, torn down after.
 pub fn run(opts: &Options) -> Result<Snapshot> {
-    let project = std::fs::canonicalize(&opts.project)
-        .map_err(|e| format!("bad project path {}: {e}", opts.project.display()))?;
-    let nom = parse_nomination(&opts.nomination);
-
-    let target_path = {
-        let p = Path::new(&nom.path);
-        if p.is_absolute() { p.to_path_buf() } else { project.join(p) }
-    };
-
-    let lang = pick_lang(opts, &project, &target_path)?;
-    let binary = lang::resolve_server(lang, &project).ok_or_else(|| {
-        format!(
-            "`{}` not found on PATH — install it with: {}",
-            lang.argv[0], lang.install
-        )
-    })?;
-    let mut argv: Vec<String> = lang.argv.iter().map(|s| s.to_string()).collect();
-    argv[0] = binary.to_string_lossy().into_owned();
-
-    let files = lang::files_for(lang, &target_path)?;
-
-    let mut client = Client::spawn(&argv, &project)?;
-    client.initialize(&project, opts.timeout)?;
-    client.wait_ready(opts.timeout);
-
-    // Collect the symbol tree of every file in the surface (a Go package is
-    // many files; a Rust module is one).
-    let mut trees: Vec<(PathBuf, Vec<Sym>)> = Vec::new();
-    let mut sources: BTreeMap<PathBuf, Vec<String>> = BTreeMap::new();
-    for file in &files {
-        client.did_open(file, lang.language_id)?;
-        let raw = client.document_symbol(file, opts.timeout)?;
-        trees.push((file.clone(), parse_symbols(&raw)));
-        let text = std::fs::read_to_string(file).unwrap_or_default();
-        sources.insert(file.clone(), text.lines().map(str::to_string).collect());
-    }
-
-    // Pick the surface: a named target's children, or the files' top level.
-    let mut surface: Vec<(PathBuf, String, Vec<Sym>)> = Vec::new();
-    if nom.symbol.is_empty() {
-        for (file, syms) in trees {
-            surface.push((file, String::new(), syms));
-        }
-    } else {
-        let mut found = false;
-        // The target's surface is the union over everything matching the path:
-        // in Rust a type's interface is its declaration *and* its impl blocks,
-        // which documentSymbol reports as siblings.
-        let parent = nom.symbol[..nom.symbol.len() - 1].join("::");
-        for (file, syms) in &trees {
-            let mut matches = Vec::new();
-            find_matches(syms, &nom.symbol, &mut matches);
-            if matches.is_empty() {
-                continue;
-            }
-            found = true;
-            let children: Vec<Sym> = matches.iter().flat_map(|m| m.children.clone()).collect();
-            if children.is_empty() {
-                // A leaf target is its own surface, qualified by its parent.
-                let leaves: Vec<Sym> = matches
-                    .iter()
-                    .filter(|m| !is_transparent(m.kind))
-                    .map(|m| (*m).clone())
-                    .collect();
-                surface.push((file.clone(), parent.clone(), leaves));
-            } else {
-                surface.push((file.clone(), nom.symbol.join("::"), children));
-            }
-        }
-        if !found {
-            return Err(format!(
-                "symbol `{}` not found in {}",
-                nom.symbol.join("::"),
-                display_files(&files, &project)
-            )
-            .into());
-        }
-    }
-
-    let mut members = Vec::new();
-    for (file, prefix, syms) in &surface {
-        let lines = sources.get(file).cloned().unwrap_or_default();
-        collect(
-            &mut client, lang, file, &project, &lines, syms, prefix, opts, 1, None, false,
-            &mut members,
-        )?;
-    }
-
-    members.sort_by(|a, b| a.id.cmp(&b.id));
-    warn_on_duplicate_ids(&members);
-    if opts.public_only {
-        members.retain(|m| m.visibility != Some(Visibility::Private));
-    }
-
-    let metrics = metrics(&members);
-    Ok(Snapshot {
-        schema: SNAPSHOT_SCHEMA.to_string(),
-        boundary: nom.path.clone(),
-        target: opts.nomination.clone(),
-        revision: revision(&project),
-        generated_at: now_rfc3339(),
-        source: SourceInfo {
-            kind: "lsp".into(),
-            server: lang.argv[0].to_string(),
+    let hint = PathBuf::from(parse_nomination(&opts.nomination).path);
+    let mut session = Session::open(
+        &opts.project,
+        opts.server.as_deref(),
+        Some(&hint),
+        opts.timeout,
+    )?;
+    session.snapshot(
+        &opts.nomination,
+        None,
+        &Shape {
+            public_only: opts.public_only,
+            depth: opts.depth,
+            timeout: opts.timeout,
         },
-        members,
-        metrics,
-    })
+    )
 }
 
-fn pick_lang(opts: &Options, project: &Path, target: &Path) -> Result<&'static Lang> {
-    if let Some(name) = &opts.server {
+fn pick_lang(server: Option<&str>, project: &Path, hint: Option<&Path>) -> Result<&'static Lang> {
+    if let Some(name) = server {
         return lang::by_name(name).ok_or_else(|| {
             let known: Vec<&str> = lang::LANGS.iter().map(|l| l.name).collect();
             format!("unknown server `{name}` — known: {}", known.join(", ")).into()
         });
     }
-    lang::by_extension(target)
+    hint.and_then(lang::by_extension)
         .or_else(|| lang::by_root_markers(project))
         .ok_or_else(|| {
-            format!(
-                "cannot tell what language {} is — pass --server",
-                target.display()
-            )
+            match hint {
+                Some(h) => format!("cannot tell what language {} is — pass --server", h.display()),
+                None => format!(
+                    "cannot tell what language {} is — name an adapter",
+                    project.display()
+                ),
+            }
             .into()
         })
 }
+
 
 /// Walk the symbol tree into members, one hover per emitted symbol.
 #[allow(clippy::too_many_arguments)]
@@ -199,7 +315,7 @@ fn collect(
     lines: &[String],
     syms: &[Sym],
     prefix: &str,
-    opts: &Options,
+    shape: &Shape,
     depth: usize,
     parent_vis: Option<Visibility>,
     nested: bool,
@@ -211,7 +327,7 @@ fn collect(
         if is_transparent(sym.kind) {
             let inner = join_id(prefix, last_ident(&sym.name));
             collect(
-                client, lang, file, project, lines, &sym.children, &inner, opts, depth, parent_vis,
+                client, lang, file, project, lines, &sym.children, &inner, shape, depth, parent_vis,
                 nested, out,
             )?;
             continue;
@@ -219,7 +335,7 @@ fn collect(
 
         let id = join_id(prefix, &sym.name);
         let hover = client
-            .hover(file, sym.selection.0, sym.selection.1, opts.timeout)
+            .hover(file, sym.selection.0, sym.selection.1, shape.timeout)
             .ok()
             .and_then(|h| hover_text(&h));
 
@@ -242,7 +358,7 @@ fn collect(
         // A callable's children are its parameters and locals, never interface
         // surface — pyright reports them, rust-analyzer and gopls don't. Stop
         // at the signature regardless of server.
-        let descend = depth < opts.depth
+        let descend = depth < shape.depth
             && !sym.children.is_empty()
             && !matches!(kind, MemberKind::Function | MemberKind::Method);
 
@@ -292,7 +408,7 @@ fn collect(
         if descend {
             let inner = join_id(prefix, &sym.name);
             collect(
-                client, lang, file, project, lines, &sym.children, &inner, opts, depth + 1,
+                client, lang, file, project, lines, &sym.children, &inner, shape, depth + 1,
                 visibility, true, out,
             )?;
         }

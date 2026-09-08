@@ -1,0 +1,139 @@
+// ha-ha.schema.kdl — the shape of a `ha-ha.kdl`, in KDL Schema.
+//
+//   https://github.com/kdl-org/kdl/blob/main/SCHEMA-SPEC.md
+//
+// This is the normative description of the nomination format. `ha-ha` embeds it
+// and checks every config against it before doing anything else, so the schema
+// and the tool cannot drift:
+//
+//   ha-ha validate ha-ha.kdl
+//
+// What a schema can say, it says here — node vocabulary, required properties,
+// value counts, and the closed `when` vocabulary. What it can't say stays in
+// `src/config.rs`: that boundary ids are unique across the file, and that an
+// adapter name selects a language server rather than a native adapter.
+
+document {
+    info {
+        title "ha-ha boundary nominations" lang=en
+        description "Projects, the boundaries beneath them, and the rules that watch each boundary." lang=en
+        author "Chris Dickinson" {
+            link "https://github.com/chrisdickinson" rel=self
+        }
+        link "https://github.com/chrisdickinson/ha-ha" rel=documentation
+        version "1.0.0"
+    }
+
+    // Only `project` at the top level: boundaries nest so that the language
+    // server they share has somewhere to live.
+    other-nodes-allowed #false
+
+    node project {
+        description "One extraction source and everything that shares it. A language server is spawned once per project and reused across every boundary beneath it."
+        value description="Two values, in order: the adapter name, then the project root. The adapter is a language ha-ha knows (rust, typescript, go, python, scala) or a native adapter for an already-reified IDL (openapi, sqlx). The root resolves relative to this file." {
+            type string
+            min 2
+            max 2
+        }
+        other-props-allowed #false
+        children {
+            other-nodes-allowed #false
+            node ref=#"[id="boundary"]"#
+            node ref=#"[id="rule"]"#
+        }
+    }
+
+    definitions {
+        node boundary id=boundary {
+            description "One nominated interface: the ha-ha. Its id is the diff key that ties snapshots together across revisions."
+            value description="The boundary id. Stable, and unique across the file." {
+                type string
+                min 1
+                max 1
+            }
+            prop target {
+                description "What to extract, relative to the project root: `<path>`, `<path>#<Symbol>`, or `<path>#<Outer>::<Inner>`. A boundary must point at something — there is no 'whole surface' form, because discovering a public API re-introduces the per-language export semantics this design avoids."
+                type string
+                required #true
+            }
+            other-props-allowed #false
+            children {
+                other-nodes-allowed #false
+                node description {
+                    description "What this boundary is for, in a sentence."
+                    max 1
+                    value {
+                        type string
+                        min 1
+                        max 1
+                    }
+                }
+                node provider {
+                    description "Globs for the side that implements the interface. Consulted only when a rule expands to call sites."
+                    value {
+                        type string
+                        min 1
+                    }
+                }
+                node consumer {
+                    description "Globs for the side that consumes the interface."
+                    value {
+                        type string
+                        min 1
+                    }
+                }
+                node ref=#"[id="rule"]"#
+            }
+        }
+
+        node rule id=rule {
+            description "A judgment to make when the boundary changes. Valid under a boundary, or under a project to apply to every boundary in it."
+            value description="The rule id." {
+                type string
+                min 1
+                max 1
+            }
+            prop when {
+                description "The deterministic trigger. Absent means the rule runs on any change. This is the closed half of the pattern: a computable signal decides whether to ask, and the prompt makes the call that isn't computable."
+                type string
+                enum "member.added" "member.removed" "member.signature_changed" "interface.grew" "interface.changed" "always"
+            }
+            prop signals {
+                description "Space-separated metric names to hand the model alongside the diff, e.g. \"member.count member.added\"."
+                type string
+            }
+            other-props-allowed #false
+            children {
+                other-nodes-allowed #false
+                node prompt {
+                    description "The rule itself, in natural language. Triple-quoted bodies dedent against the closing delimiter."
+                    min 1
+                    max 1
+                    value {
+                        type string
+                        min 1
+                        max 1
+                    }
+                }
+                node expand {
+                    description "Lazy usage expansion: when the trigger fires, go read the call sites. There is no standing call graph, so this is the only thing that looks past the interface itself."
+                    max 1
+                    prop sides {
+                        description "Space-separated: provider, consumer, or both."
+                        type string
+                    }
+                    prop each {
+                        description "What to gather per side."
+                        type string
+                        enum "references"
+                    }
+                    prop context-lines {
+                        description "Lines of surrounding source to include with each hit."
+                        type integer
+                    }
+                    other-props-allowed #false
+                }
+            }
+        }
+    }
+}

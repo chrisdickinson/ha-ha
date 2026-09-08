@@ -1,0 +1,19 @@
+{
+  "name": "ha-ha",
+  "version": "0.1.0",
+  "description": "Skills for nominating boundaries and writing ha-ha.kdl: name the interfaces the compiler can't see as one unit, and write the rules that watch them change.",
+  "author": {
+    "name": "Chris Dickinson",
+    "email": "chris@neversaw.us"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ha-ha",
+    "kdl",
+    "boundary",
+    "interface",
+    "lsp",
+    "architecture",
+    "code-review"
+  ]
+}
