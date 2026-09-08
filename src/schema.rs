@@ -142,7 +142,11 @@ impl Schema {
     }
 }
 
-fn compile_node(node: &KdlNode, defs: &BTreeMap<String, &KdlNode>, depth: usize) -> Result<NodeDef> {
+fn compile_node(
+    node: &KdlNode,
+    defs: &BTreeMap<String, &KdlNode>,
+    depth: usize,
+) -> Result<NodeDef> {
     if depth > 16 {
         return Err("schema `ref` chain is too deep — is there a cycle?".into());
     }
@@ -190,13 +194,12 @@ fn compile_node(node: &KdlNode, defs: &BTreeMap<String, &KdlNode>, depth: usize)
             "children" => {
                 for grandchild in child.iter_children() {
                     match grandchild.name().value() {
-                        "other-nodes-allowed" => {
-                            def.children.other_allowed = bool_arg(grandchild)?
+                        "other-nodes-allowed" => def.children.other_allowed = bool_arg(grandchild)?,
+                        "node" => {
+                            def.children
+                                .nodes
+                                .push(compile_node(grandchild, defs, depth + 1)?)
                         }
-                        "node" => def
-                            .children
-                            .nodes
-                            .push(compile_node(grandchild, defs, depth + 1)?),
                         other => return Err(unsupported(other, "children").into()),
                     }
                 }
@@ -321,7 +324,9 @@ fn string_args(node: &KdlNode) -> Result<Vec<String>> {
 }
 
 fn string_prop(node: &KdlNode, key: &str) -> Option<String> {
-    node.get(key).and_then(|v| v.as_string()).map(str::to_string)
+    node.get(key)
+        .and_then(|v| v.as_string())
+        .map(str::to_string)
 }
 
 // ---------------------------------------------------------------------------
@@ -376,7 +381,11 @@ fn check_children(
         {
             errors.push(format!(
                 "{parent}{within} needs {} `{}`{}, and has {seen}",
-                if min == 1 { "a".into() } else { min.to_string() },
+                if min == 1 {
+                    "a".into()
+                } else {
+                    min.to_string()
+                },
                 def.name,
                 if min == 1 { "" } else { " of them" }
             ));
@@ -598,14 +607,20 @@ mod tests {
             .expect("rule definition");
         let when = rule
             .iter_children()
-            .find(|n| n.name().value() == "prop" && n.get(0usize).and_then(|v| v.as_string()) == Some("when"))
+            .find(|n| {
+                n.name().value() == "prop"
+                    && n.get(0usize).and_then(|v| v.as_string()) == Some("when")
+            })
             .expect("when prop");
         let values = when
             .iter_children()
             .find(|n| n.name().value() == "enum")
             .map(|n| string_args(n).expect("enum values"))
             .expect("enum");
-        assert_eq!(values, PREDICATES, "schema `when` enum drifted from PREDICATES");
+        assert_eq!(
+            values, PREDICATES,
+            "schema `when` enum drifted from PREDICATES"
+        );
     }
 
     /// A validator that ignored a constraint it did not implement would let the
@@ -659,7 +674,11 @@ mod tests {
     fn counts_values_and_checks_their_type() {
         let schema = r#"document { node n { value { type integer; min 1; max 2 } } }"#;
         assert!(errors_for(schema, "n 1 2").is_empty());
-        assert!(errors_for(schema, "n").iter().any(|e| e.contains("needs 1 value")));
+        assert!(
+            errors_for(schema, "n")
+                .iter()
+                .any(|e| e.contains("needs 1 value"))
+        );
         assert!(
             errors_for(schema, "n 1 2 3")
                 .iter()

@@ -161,7 +161,13 @@ impl Client {
         )
     }
 
-    pub fn hover(&mut self, path: &Path, line: u32, character: u32, timeout: Duration) -> Result<Value> {
+    pub fn hover(
+        &mut self,
+        path: &Path,
+        line: u32,
+        character: u32,
+        timeout: Duration,
+    ) -> Result<Value> {
         self.request(
             "textDocument/hover",
             json!({
@@ -201,7 +207,11 @@ impl Client {
     ///
     /// Answering matters: rust-analyzer blocks on `workspace/configuration`, so
     /// a client that only listens for its own responses deadlocks here.
-    fn pump<T>(&mut self, deadline: Instant, mut want: impl FnMut(&Value) -> Option<T>) -> Result<T> {
+    fn pump<T>(
+        &mut self,
+        deadline: Instant,
+        mut want: impl FnMut(&Value) -> Option<T>,
+    ) -> Result<T> {
         loop {
             let left = deadline.saturating_duration_since(Instant::now());
             if left.is_zero() {
@@ -340,10 +350,7 @@ mod tests {
 
     #[test]
     fn encodes_spaces_but_not_separators() {
-        assert_eq!(
-            path_to_uri(Path::new("/a b/c.rs")),
-            "file:///a%20b/c.rs"
-        );
+        assert_eq!(path_to_uri(Path::new("/a b/c.rs")), "file:///a%20b/c.rs");
     }
 
     #[test]
@@ -353,6 +360,9 @@ mod tests {
             default_reply("workspace/configuration", Some(&params)),
             json!([null, null])
         );
-        assert_eq!(default_reply("client/registerCapability", None), Value::Null);
+        assert_eq!(
+            default_reply("client/registerCapability", None),
+            Value::Null
+        );
     }
 }

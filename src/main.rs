@@ -76,11 +76,7 @@ fn run() -> Result<()> {
 /// a four-minute metals startup.
 fn validate(args: &[String]) -> Result<()> {
     let [path] = args else {
-        return Err(format!(
-            "expected exactly one <file>, got {}\n\n{USAGE}",
-            args.len()
-        )
-        .into());
+        return Err(format!("expected exactly one <file>, got {}\n\n{USAGE}", args.len()).into());
     };
     let path = PathBuf::from(path);
     let config = config::load(&path)?;
@@ -157,24 +153,25 @@ fn extract(rest: &[String]) -> Result<()> {
 
     if let Some(path) = config {
         if !positional.is_empty() {
-            return Err(
-                format!("--config names the boundaries; drop the positional arguments\n\n{USAGE}")
-                    .into(),
-            );
+            return Err(format!(
+                "--config names the boundaries; drop the positional arguments\n\n{USAGE}"
+            )
+            .into());
         }
         if server.is_some() {
-            return Err("--server conflicts with --config: each `project` node names its own adapter".into());
+            return Err(
+                "--server conflicts with --config: each `project` node names its own adapter"
+                    .into(),
+            );
         }
         // Always an array, even for one boundary — the shape of the output
         // should not depend on how many boundaries a config happens to hold.
         let (snapshots, failed) = from_config(&path, &shape)?;
         print_json(&snapshots, pretty)?;
         if failed > 0 {
-            return Err(format!(
-                "{failed} of {} boundaries failed",
-                failed + snapshots.len()
-            )
-            .into());
+            return Err(
+                format!("{failed} of {} boundaries failed", failed + snapshots.len()).into(),
+            );
         }
         return Ok(());
     }
