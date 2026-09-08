@@ -1,0 +1,25 @@
+name: Release Please
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      # RELEASE_PLEASE_TOKEN, not GITHUB_TOKEN, and it is load-bearing twice
+      # over. Anything created with GITHUB_TOKEN does not trigger workflows, so
+      # (1) the tag this action pushes would never start release.yml, and
+      # (2) the release PR it opens would never run ci.yml -- leaving it unable
+      # to satisfy the `test-all`/`lint` checks the branch ruleset requires,
+      # i.e. permanently unmergeable.
+      - uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          release-type: rust
