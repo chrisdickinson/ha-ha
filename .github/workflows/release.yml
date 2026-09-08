@@ -75,11 +75,20 @@ jobs:
           path: artifacts
           merge-multiple: true
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: artifacts/*
-          generate_release_notes: true
+      # release-please has already created the release -- pushing the tag *is*
+      # it creating the release, with the generated CHANGELOG as the body. So
+      # this only attaches binaries; regenerating notes here would overwrite
+      # that changelog with GitHub's auto-generated list. The `create` fallback
+      # covers a `v*` tag pushed by hand, with no release-please run behind it.
+      - name: Attach binaries to the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release view "$TAG" >/dev/null 2>&1 \
+            || gh release create "$TAG" --title "$TAG" --generate-notes
+          gh release upload "$TAG" artifacts/* --clobber
 
   docker:
     needs: build
