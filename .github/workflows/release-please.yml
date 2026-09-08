@@ -19,7 +19,19 @@ jobs:
       # (2) the release PR it opens would never run ci.yml -- leaving it unable
       # to satisfy the `test-all`/`lint` checks the branch ruleset requires,
       # i.e. permanently unmergeable.
+      #
+      # Manifest mode (config-file + manifest-file) rather than an inline
+      # `release-type: rust`: only a config file can carry `extra-files`, which
+      # is how the plugin and marketplace manifests get bumped in the same PR
+      # as Cargo.toml and Cargo.lock. One merge, one version, everywhere.
+      #
+      # The homebrew formula is the exception, and unavoidably so: it lives in
+      # another repo and pins the sha256 of tarballs that do not exist until
+      # after the tag is pushed. release.yml updates it once the binaries are
+      # built, so merging this PR is still the single action that moves
+      # everything.
       - uses: googleapis/release-please-action@v5
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-          release-type: rust
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json

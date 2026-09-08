@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    ".": {
+      "release-type": "rust",
+
+      "//": "Keep tags `v0.1.0`, not `ha-ha-v0.1.0`. The action's inline `release-type` mode forced this off; manifest mode defaults it on, and flipping it would orphan the existing v0.1.0 tag and break release.yml's `on: push: tags: v*` trigger.",
+      "include-component-in-tag": false,
+
+      "//extra-files": "Cargo.toml and Cargo.lock are the rust strategy's job. These two are not: the plugin and the marketplace carry the same version by hand, and drift between them and the crate is invisible until someone installs the plugin.",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": ".claude-plugin/marketplace.json",
+          "jsonpath": "$.metadata.version"
+        }
+      ]
+    }
+  }
+}

@@ -138,3 +138,52 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  # A separate repo, so this cannot ride along in the release-please PR: the
+  # formula pins the sha256 of tarballs that do not exist until `build` has
+  # run. `needs: release` rather than `needs: build` so the sums are taken
+  # from the *published* assets -- the exact bytes brew will fetch.
+  homebrew:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the published unix assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: gh release download "$TAG" --dir assets --pattern "*.tar.gz"
+
+      - name: Check out the tap
+        uses: actions/checkout@v4
+        with:
+          repository: chrisdickinson/homebrew-tap
+          path: tap
+          # GITHUB_TOKEN is scoped to this repo and cannot write to the tap.
+          # HOMEBREW_TAP_TOKEN if you want a PAT scoped to just the tap;
+          # otherwise RELEASE_PLEASE_TOKEN, which already reaches both if it
+          # is a classic `repo`-scoped token.
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN || secrets.RELEASE_PLEASE_TOKEN }}
+
+      - name: Render and push Formula/ha-ha.rb
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          .github/render-formula.sh "${TAG#v}" assets > tap/Formula/ha-ha.rb
+
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/ha-ha.rb
+
+          # Re-tagging the same version renders the same file; nothing to say.
+          if git diff --cached --quiet; then
+            echo "formula already at ${TAG#v}"
+            exit 0
+          fi
+
+          git commit -m "ha-ha ${TAG#v}"
+          git push
