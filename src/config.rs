@@ -21,7 +21,11 @@ pub fn load(path: &Path) -> Result<Config> {
         .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     // Roots and globs are written relative to the config file, not the cwd.
     let base = path.parent().filter(|p| !p.as_os_str().is_empty());
-    parse(&text, &path.display().to_string(), base.unwrap_or(Path::new(".")))
+    parse(
+        &text,
+        &path.display().to_string(),
+        base.unwrap_or(Path::new(".")),
+    )
 }
 
 pub fn parse(text: &str, origin: &str, base: &Path) -> Result<Config> {
@@ -40,7 +44,11 @@ pub fn parse(text: &str, origin: &str, base: &Path) -> Result<Config> {
         let mut out = format!(
             "{origin}: {} {} the schema",
             errors.len(),
-            if errors.len() == 1 { "problem with" } else { "problems with" }
+            if errors.len() == 1 {
+                "problem with"
+            } else {
+                "problems with"
+            }
         );
         for error in &errors {
             out.push_str(&format!("\n  {error}"));
@@ -77,7 +85,10 @@ fn project(node: &KdlNode, cx: &Ctx, seen: &mut Vec<String>) -> Result<Project> 
     // adapter for an already-reified IDL, which `extract` reports as
     // unimplemented rather than guessing at.
     let source = if lang::by_name(&adapter).is_some() {
-        Source::Lsp { server: adapter, root }
+        Source::Lsp {
+            server: adapter,
+            root,
+        }
     } else {
         Source::Native { adapter, root }
     };
@@ -99,7 +110,11 @@ fn project(node: &KdlNode, cx: &Ctx, seen: &mut Vec<String>) -> Result<Project> 
             }
         }
     }
-    Ok(Project { source, rules, boundaries })
+    Ok(Project {
+        source,
+        rules,
+        boundaries,
+    })
 }
 
 /// `boundary <id> target=<nomination> { … }`
@@ -143,7 +158,13 @@ fn boundary(node: &KdlNode, cx: &Ctx, seen: &mut Vec<String>) -> Result<Nominati
             }
         }
     }
-    Ok(Nomination { id, description, target, sides, rules })
+    Ok(Nomination {
+        id,
+        description,
+        target,
+        sides,
+        rules,
+    })
 }
 
 /// `rule <id> when=<predicate> signals=<space-separated> { prompt "…"; expand … }`
@@ -183,9 +204,18 @@ fn rule(node: &KdlNode, cx: &Ctx) -> Result<Rule> {
     }
 
     let prompt = prompt.ok_or_else(|| {
-        cx.err(node, format!("rule `{id}` needs a `prompt` — a rule is a judgment in natural language"))
+        cx.err(
+            node,
+            format!("rule `{id}` needs a `prompt` — a rule is a judgment in natural language"),
+        )
     })?;
-    Ok(Rule::Judge { id, when, signals, expand, prompt })
+    Ok(Rule::Judge {
+        id,
+        when,
+        signals,
+        expand,
+        prompt,
+    })
 }
 
 /// `expand sides=<space-separated> each="references" context-lines=<n>`
@@ -196,13 +226,22 @@ fn expand_of(node: &KdlNode, cx: &Ctx) -> Result<Expand> {
         .prop(node, "sides")?
         .map(|s| s.split_whitespace().map(str::to_string).collect())
         .unwrap_or_default();
-    if let Some(bad) = sides.iter().find(|s| !matches!(s.as_str(), "provider" | "consumer")) {
-        return Err(cx.err(node, format!("unknown side `{bad}` — expected `provider` or `consumer`")));
+    if let Some(bad) = sides
+        .iter()
+        .find(|s| !matches!(s.as_str(), "provider" | "consumer"))
+    {
+        return Err(cx.err(
+            node,
+            format!("unknown side `{bad}` — expected `provider` or `consumer`"),
+        ));
     }
 
     let each = cx.prop(node, "each")?.unwrap_or(defaults.each);
     if each != "references" {
-        return Err(cx.err(node, format!("unknown expansion `{each}` — only `references` today")));
+        return Err(cx.err(
+            node,
+            format!("unknown expansion `{each}` — only `references` today"),
+        ));
     }
 
     let context_lines = match node.get("context-lines") {
@@ -213,7 +252,11 @@ fn expand_of(node: &KdlNode, cx: &Ctx) -> Result<Expand> {
             .ok_or_else(|| cx.err(node, "`context-lines` must be a non-negative integer"))?,
     };
 
-    Ok(Expand { sides, each, context_lines })
+    Ok(Expand {
+        sides,
+        each,
+        context_lines,
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -360,7 +403,10 @@ project "openapi" "spec/openapi.json"
 
         let storage = &rust.boundaries[0];
         assert_eq!(storage.target, "src/storage/mod.rs#Repository");
-        assert_eq!(storage.description, "Repository trait consumed by the domain layer");
+        assert_eq!(
+            storage.description,
+            "Repository trait consumed by the domain layer"
+        );
         assert_eq!(storage.sides.provider, ["src/storage/**"]);
         assert_eq!(storage.sides.consumer, ["src/domain/**", "src/api/**"]);
         assert_eq!(storage.rules.len(), 2);
@@ -371,7 +417,9 @@ project "openapi" "spec/openapi.json"
 
         // An unknown adapter is a native source, not an error: `extract`
         // reports it as unimplemented rather than the config refusing to load.
-        assert!(matches!(&config.projects[1].source, Source::Native { adapter, .. } if adapter == "openapi"));
+        assert!(
+            matches!(&config.projects[1].source, Source::Native { adapter, .. } if adapter == "openapi")
+        );
     }
 
     #[test]
@@ -379,7 +427,13 @@ project "openapi" "spec/openapi.json"
         let config = cfg(EXAMPLE).expect("parse");
         let rules = &config.projects[0].boundaries[0].rules;
         match &rules[0] {
-            Rule::Judge { id, when, signals, expand, prompt } => {
+            Rule::Judge {
+                id,
+                when,
+                signals,
+                expand,
+                prompt,
+            } => {
                 assert_eq!(id, "keep-it-small");
                 assert_eq!(when.as_deref(), Some("interface.grew"));
                 assert_eq!(signals, &["member.count", "member.added"]);
@@ -394,7 +448,9 @@ project "openapi" "spec/openapi.json"
             other => panic!("expected a judge, got {other:?}"),
         }
         match &rules[1] {
-            Rule::Judge { expand: Some(e), .. } => {
+            Rule::Judge {
+                expand: Some(e), ..
+            } => {
                 assert_eq!(e.sides, ["provider", "consumer"]);
                 assert_eq!(e.each, "references");
                 assert_eq!(e.context_lines, 4);
@@ -413,7 +469,9 @@ project "rust" "." {
 }"#)
         .expect("parse");
         match &config.projects[0].boundaries[0].rules[0] {
-            Rule::Judge { expand: Some(e), .. } => {
+            Rule::Judge {
+                expand: Some(e), ..
+            } => {
                 assert_eq!(e.each, "references");
                 assert_eq!(e.context_lines, 3);
             }
@@ -443,7 +501,10 @@ project "rust" "." {
     #[test]
     fn rejects_an_empty_target() {
         // "the whole surface" is API discovery, which the design avoids.
-        rejects(r#"project "rust" "." { boundary "b" target="" }"#, "empty `target`");
+        rejects(
+            r#"project "rust" "." { boundary "b" target="" }"#,
+            "empty `target`",
+        );
     }
 
     #[test]
@@ -519,7 +580,10 @@ project "rust" "." {
             .expect_err("should be rejected")
             .to_string();
         assert!(err.contains("unknown node `boundry`"), "got: {err}");
-        assert!(err.contains("missing the required property `target`"), "got: {err}");
+        assert!(
+            err.contains("missing the required property `target`"),
+            "got: {err}"
+        );
         assert!(err.starts_with("ha-ha.kdl: 2 problems"), "got: {err}");
     }
 
@@ -557,6 +621,9 @@ project "go" "b"   { boundary "dup" target="y" }
             .expect_err("should be rejected")
             .to_string();
         assert!(err.contains("invalid KDL"), "got: {err}");
-        assert!(err.contains("ha-ha.kdl:2:12:"), "error lacks a location: {err}");
+        assert!(
+            err.contains("ha-ha.kdl:2:12:"),
+            "error lacks a location: {err}"
+        );
     }
 }

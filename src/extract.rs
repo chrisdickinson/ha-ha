@@ -11,12 +11,12 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Duration;
 
+use crate::Result;
 use crate::lang::{self, Decl, Lang};
 use crate::lsp::Client;
 use crate::model::{
     Member, MemberKind, Provenance, SNAPSHOT_SCHEMA, Snapshot, SourceInfo, Visibility,
 };
-use crate::Result;
 
 pub struct Options {
     pub project: PathBuf,
@@ -74,7 +74,6 @@ pub fn parse_nomination(s: &str) -> Nomination {
         },
     }
 }
-
 
 // ---------------------------------------------------------------------------
 // Session — one language server, many boundaries
@@ -211,10 +210,24 @@ impl Session {
         let lang = self.lang;
         let mut members = Vec::new();
         for (file, prefix, syms) in &surface {
-            let lines = self.files.get(file).map(|f| f.lines.clone()).unwrap_or_default();
+            let lines = self
+                .files
+                .get(file)
+                .map(|f| f.lines.clone())
+                .unwrap_or_default();
             collect(
-                &mut self.client, lang, file, &project, &lines, syms, prefix, shape, 1, None,
-                false, &mut members,
+                &mut self.client,
+                lang,
+                file,
+                &project,
+                &lines,
+                syms,
+                prefix,
+                shape,
+                1,
+                None,
+                false,
+                &mut members,
             )?;
         }
 
@@ -294,7 +307,10 @@ fn pick_lang(server: Option<&str>, project: &Path, hint: Option<&Path>) -> Resul
         .or_else(|| lang::by_root_markers(project))
         .ok_or_else(|| {
             match hint {
-                Some(h) => format!("cannot tell what language {} is — pass --server", h.display()),
+                Some(h) => format!(
+                    "cannot tell what language {} is — pass --server",
+                    h.display()
+                ),
                 None => format!(
                     "cannot tell what language {} is — name an adapter",
                     project.display()
@@ -303,7 +319,6 @@ fn pick_lang(server: Option<&str>, project: &Path, hint: Option<&Path>) -> Resul
             .into()
         })
 }
-
 
 /// Walk the symbol tree into members, one hover per emitted symbol.
 #[allow(clippy::too_many_arguments)]
@@ -327,8 +342,18 @@ fn collect(
         if is_transparent(sym.kind) {
             let inner = join_id(prefix, last_ident(&sym.name));
             collect(
-                client, lang, file, project, lines, &sym.children, &inner, shape, depth, parent_vis,
-                nested, out,
+                client,
+                lang,
+                file,
+                project,
+                lines,
+                &sym.children,
+                &inner,
+                shape,
+                depth,
+                parent_vis,
+                nested,
+                out,
             )?;
             continue;
         }
@@ -408,8 +433,18 @@ fn collect(
         if descend {
             let inner = join_id(prefix, &sym.name);
             collect(
-                client, lang, file, project, lines, &sym.children, &inner, shape, depth + 1,
-                visibility, true, out,
+                client,
+                lang,
+                file,
+                project,
+                lines,
+                &sym.children,
+                &inner,
+                shape,
+                depth + 1,
+                visibility,
+                true,
+                out,
             )?;
         }
     }
@@ -449,7 +484,10 @@ pub fn parse_symbols(raw: &Value) -> Vec<Sym> {
         let sym = Sym {
             name: string_at(item, "name"),
             kind: item["kind"].as_u64().unwrap_or(0) as u8,
-            detail: item.get("detail").and_then(Value::as_str).map(str::to_string),
+            detail: item
+                .get("detail")
+                .and_then(Value::as_str)
+                .map(str::to_string),
             selection: range.map(range_start).unwrap_or((0, 0)),
             range: range.map(range_quad).unwrap_or([0; 4]),
             children: Vec::new(),
@@ -517,7 +555,11 @@ fn find_matches<'a>(syms: &'a [Sym], path: &[String], out: &mut Vec<&'a Sym>) {
     };
     for sym in syms {
         let transparent = is_transparent(sym.kind);
-        let name = if transparent { last_ident(&sym.name) } else { sym.name.as_str() };
+        let name = if transparent {
+            last_ident(&sym.name)
+        } else {
+            sym.name.as_str()
+        };
         if name == head {
             if rest.is_empty() {
                 out.push(sym);
@@ -640,9 +682,7 @@ pub fn docs_of(hover: &str) -> Option<String> {
         .split("\n---\n")
         .map(str::trim)
         .filter(|s| {
-            !s.is_empty()
-                && !s.starts_with("```")
-                && !HOVER_NOISE.iter().any(|n| s.starts_with(n))
+            !s.is_empty() && !s.starts_with("```") && !HOVER_NOISE.iter().any(|n| s.starts_with(n))
         })
         .collect();
     (!prose.is_empty()).then(|| prose.join("\n\n"))
@@ -655,9 +695,9 @@ pub fn docs_of(hover: &str) -> Option<String> {
 /// LSP `SymbolKind` → our normalized projection.
 pub fn member_kind(kind: u8) -> MemberKind {
     match kind {
-        5 | 23 => MemberKind::Record,      // Class, Struct
-        6 | 9 | 25 => MemberKind::Method,  // Method, Constructor, Operator
-        7 | 8 => MemberKind::Field,        // Property, Field
+        5 | 23 => MemberKind::Record,     // Class, Struct
+        6 | 9 | 25 => MemberKind::Method, // Method, Constructor, Operator
+        7 | 8 => MemberKind::Field,       // Property, Field
         10 => MemberKind::Enum,
         11 => MemberKind::Interface,
         12 => MemberKind::Function,
@@ -856,7 +896,10 @@ mod tests {
     fn splits_path_from_symbol_path() {
         assert_eq!(
             parse_nomination("src/storage/mod.rs"),
-            Nomination { path: "src/storage/mod.rs".into(), symbol: vec![] }
+            Nomination {
+                path: "src/storage/mod.rs".into(),
+                symbol: vec![]
+            }
         );
         assert_eq!(
             parse_nomination("src/storage/mod.rs#Repository"),
@@ -916,20 +959,41 @@ mod tests {
     #[test]
     fn arity_anchors_to_the_symbol_name() {
         assert_eq!(arity("fn f(a: Map<K, V>, b: u8)", "f"), Some(2));
-        assert_eq!(arity("pub fn find_user(&self, id: u64) -> Option<User>", "find_user"), Some(2));
+        assert_eq!(
+            arity(
+                "pub fn find_user(&self, id: u64) -> Option<User>",
+                "find_user"
+            ),
+            Some(2)
+        );
         assert_eq!(arity("fn f()", "f"), Some(0));
         assert_eq!(arity("fn f(a: (u8, u8))", "f"), Some(1));
         assert_eq!(arity("pub fn foo<T>(x: T, y: T)", "foo"), Some(2));
 
         // Go puts the receiver before the name; counting the first paren group
         // would report the receiver instead of the parameters.
-        assert_eq!(arity("func (Repository) ListUsers() ([]User, error)", "ListUsers"), Some(0));
-        assert_eq!(arity("func (Repository) FindUser(id uint64) (*User, error)", "FindUser"), Some(1));
-        assert_eq!(arity("func OpenPool(url string, max int) string", "OpenPool"), Some(2));
+        assert_eq!(
+            arity("func (Repository) ListUsers() ([]User, error)", "ListUsers"),
+            Some(0)
+        );
+        assert_eq!(
+            arity(
+                "func (Repository) FindUser(id uint64) (*User, error)",
+                "FindUser"
+            ),
+            Some(1)
+        );
+        assert_eq!(
+            arity("func OpenPool(url string, max int) string", "OpenPool"),
+            Some(2)
+        );
 
         // No parameter list at all — including when an unrelated group follows.
         assert_eq!(arity("pub struct User", "User"), None);
-        assert_eq!(arity("type Repository interface { (0x10) }", "Repository"), None);
+        assert_eq!(
+            arity("type Repository interface { (0x10) }", "Repository"),
+            None
+        );
         assert_eq!(arity("fn broken(a: u8", "broken"), None);
     }
 
@@ -1006,7 +1070,10 @@ mod tests {
     #[test]
     fn hover_contents_shapes_all_flatten() {
         assert_eq!(hover_text(&json!({"contents": "x"})).unwrap(), "x");
-        assert_eq!(hover_text(&json!({"contents": {"value": "x"}})).unwrap(), "x");
+        assert_eq!(
+            hover_text(&json!({"contents": {"value": "x"}})).unwrap(),
+            "x"
+        );
         assert_eq!(
             hover_text(&json!({"contents": [{"value": "a"}, "b"]})).unwrap(),
             "a\nb"

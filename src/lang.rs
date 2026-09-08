@@ -73,8 +73,14 @@ pub const LANGS: &[Lang] = &[
         detail_lang: "typescript",
         extensions: &["ts", "tsx", "mts", "cts", "js", "jsx", "mjs", "cjs"],
         dir: DirMode::Entry(&[
-            "index.ts", "index.tsx", "index.mts", "index.cts", "index.js", "index.jsx",
-            "index.mjs", "index.cjs",
+            "index.ts",
+            "index.tsx",
+            "index.mts",
+            "index.cts",
+            "index.js",
+            "index.jsx",
+            "index.mjs",
+            "index.cjs",
         ]),
         server_hints: &["./node_modules/.bin", "bin", ".local/bin"],
         install: "npm install -g typescript",
@@ -99,13 +105,22 @@ pub const LANGS: &[Lang] = &[
     Lang {
         name: "scala",
         argv: &["metals"],
-        root_markers: &["build.sbt", "build.sc", "build.mill", "project/build.properties", ".scala-build"],
+        root_markers: &[
+            "build.sbt",
+            "build.sc",
+            "build.mill",
+            "project/build.properties",
+            ".scala-build",
+        ],
         language_id: "scala",
         detail_lang: "scala",
         extensions: &["scala", "sc", "sbt"],
         // Like Go, a Scala package is the directory: `package storage` is
         // declared per file and spans all of them.
-        dir: DirMode::Package { ext: "scala", exclude_suffix: &[] },
+        dir: DirMode::Package {
+            ext: "scala",
+            exclude_suffix: &[],
+        },
         server_hints: &[
             "Library/Application Support/Coursier/bin",
             ".local/share/coursier/bin",
@@ -196,9 +211,7 @@ fn python_visibility(d: &Decl) -> Option<Visibility> {
 // ---- selection ----
 
 pub fn by_name(name: &str) -> Option<&'static Lang> {
-    LANGS
-        .iter()
-        .find(|l| l.name == name || l.argv[0] == name)
+    LANGS.iter().find(|l| l.name == name || l.argv[0] == name)
 }
 
 pub fn by_extension(path: &Path) -> Option<&'static Lang> {
@@ -247,16 +260,16 @@ pub fn files_for(lang: &Lang, path: &Path) -> crate::Result<Vec<PathBuf>> {
                 .filter_map(|e| e.ok().map(|e| e.path()))
                 .filter(|p| p.is_file() && p.extension().and_then(|e| e.to_str()) == Some(ext))
                 .filter(|p| {
-                    let name = p.file_name().unwrap_or_default().to_string_lossy().into_owned();
+                    let name = p
+                        .file_name()
+                        .unwrap_or_default()
+                        .to_string_lossy()
+                        .into_owned();
                     !exclude_suffix.iter().any(|s| name.ends_with(s))
                 })
                 .collect();
             if files.is_empty() {
-                return Err(format!(
-                    "{} contains no .{ext} files",
-                    path.display()
-                )
-                .into());
+                return Err(format!("{} contains no .{ext} files", path.display()).into());
             }
             // Sorted so the snapshot doesn't depend on readdir order.
             files.sort();
@@ -310,25 +323,56 @@ mod tests {
         by_name(name).expect("known language")
     }
 
-    fn decl<'a>(name: &'a str, declaration: &'a str, source_line: &'a str, nested: bool) -> Decl<'a> {
-        Decl { name, declaration, source_line, nested }
+    fn decl<'a>(
+        name: &'a str,
+        declaration: &'a str,
+        source_line: &'a str,
+        nested: bool,
+    ) -> Decl<'a> {
+        Decl {
+            name,
+            declaration,
+            source_line,
+            nested,
+        }
     }
 
     #[test]
     fn visibility_rules_are_one_token() {
         let rust = lang("rust").visibility;
-        assert_eq!(rust(&decl("f", "pub fn f()", "", false)), Some(Visibility::Public));
-        assert_eq!(rust(&decl("f", "pub(crate) fn f()", "", false)), Some(Visibility::Public));
-        assert_eq!(rust(&decl("f", "fn f()", "", false)), Some(Visibility::Private));
+        assert_eq!(
+            rust(&decl("f", "pub fn f()", "", false)),
+            Some(Visibility::Public)
+        );
+        assert_eq!(
+            rust(&decl("f", "pub(crate) fn f()", "", false)),
+            Some(Visibility::Public)
+        );
+        assert_eq!(
+            rust(&decl("f", "fn f()", "", false)),
+            Some(Visibility::Private)
+        );
         // `public` is not `pub` — don't match on a prefix alone.
-        assert_eq!(rust(&decl("public_x", "fn public_x()", "", false)), Some(Visibility::Private));
+        assert_eq!(
+            rust(&decl("public_x", "fn public_x()", "", false)),
+            Some(Visibility::Private)
+        );
 
         let go = lang("go").visibility;
-        assert_eq!(go(&decl("Find", "func Find()", "", false)), Some(Visibility::Public));
-        assert_eq!(go(&decl("find", "func find()", "", false)), Some(Visibility::Private));
+        assert_eq!(
+            go(&decl("Find", "func Find()", "", false)),
+            Some(Visibility::Public)
+        );
+        assert_eq!(
+            go(&decl("find", "func find()", "", false)),
+            Some(Visibility::Private)
+        );
 
         let py = lang("python").visibility;
-        assert_eq!(py(&decl("_helper", "", "", false)), Some(Visibility::Private));
+        assert_eq!(
+            py(&decl("_helper", "", "", false)),
+            Some(Visibility::Private)
+        );
         assert_eq!(py(&decl("helper", "", "", false)), Some(Visibility::Public));
     }
 
@@ -338,15 +382,28 @@ mod tests {
         // Hover gives `function openPool(...)` either way; the source line decides.
         let hover = "function openPool(url: string): string";
         assert_eq!(
-            ts(&decl("openPool", hover, "export function openPool(url: string) {", false)),
+            ts(&decl(
+                "openPool",
+                hover,
+                "export function openPool(url: string) {",
+                false
+            )),
             Some(Visibility::Public)
         );
         assert_eq!(
-            ts(&decl("openPool", hover, "function openPool(url: string) {", false)),
+            ts(&decl(
+                "openPool",
+                hover,
+                "function openPool(url: string) {",
+                false
+            )),
             Some(Visibility::Private)
         );
         // Interface members have no marker — defer to the container.
-        assert_eq!(ts(&decl("findUser", "", "  findUser(id: number): User;", true)), None);
+        assert_eq!(
+            ts(&decl("findUser", "", "  findUser(id: number): User;", true)),
+            None
+        );
         assert_eq!(
             ts(&decl("secret", "", "  private secret(): void;", true)),
             Some(Visibility::Private)
@@ -356,9 +413,17 @@ mod tests {
     #[test]
     fn scala_is_public_unless_marked() {
         let scala = lang("scala").visibility;
-        assert_eq!(scala(&decl("f", "def f(): Unit", "  def f(): Unit", false)), Some(Visibility::Public));
         assert_eq!(
-            scala(&decl("f", "def f(): Unit", "  private def f(): Unit", false)),
+            scala(&decl("f", "def f(): Unit", "  def f(): Unit", false)),
+            Some(Visibility::Public)
+        );
+        assert_eq!(
+            scala(&decl(
+                "f",
+                "def f(): Unit",
+                "  private def f(): Unit",
+                false
+            )),
             Some(Visibility::Private)
         );
         // Qualified private is still private.
@@ -371,7 +436,10 @@ mod tests {
             Some(Visibility::Private)
         );
         // Unmarked members defer to the enclosing type.
-        assert_eq!(scala(&decl("f", "def f(): Unit", "  def f(): Unit", true)), None);
+        assert_eq!(
+            scala(&decl("f", "def f(): Unit", "  def f(): Unit", true)),
+            None
+        );
     }
 
     #[test]
