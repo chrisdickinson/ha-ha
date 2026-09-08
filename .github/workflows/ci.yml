@@ -30,6 +30,23 @@ jobs:
 
       - run: cargo test --locked
 
+  # Stable name for the branch ruleset to require. Matrix legs are named
+  # `test (ubuntu-latest)` etc., so requiring them directly re-pins the ruleset
+  # every time the matrix changes -- and a leg that is renamed away silently
+  # stops being enforced. This job depends on the whole matrix instead.
+  #
+  # `if: always()` is load-bearing: without it a failed or cancelled leg leaves
+  # this job *skipped*, and GitHub treats a skipped required check as passing.
+  test-all:
+    if: always()
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: All test legs succeeded
+        run: |
+          echo "test matrix result: ${{ needs.test.result }}"
+          test "${{ needs.test.result }}" = "success"
+
   lint:
     runs-on: ubuntu-latest
     steps:
