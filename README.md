@@ -7,6 +7,22 @@ A **ha-ha** is a boundary that is real to the people working on the code but
 invisible to the type system — "the domain layer only talks to storage through
 `Repository`" — where nothing enforces the contract but a reviewer's memory.
 
+## Install
+
+```
+brew tap chrisdickinson/tap
+brew trust chrisdickinson/tap
+brew install ha-ha
+```
+
+`brew trust` is not optional: Homebrew refuses to load a formula from an
+untrusted third-party tap. The formula installs a prebuilt binary — macOS and
+Linux, arm64 and x86_64 — so this is a download, not a compile.
+
+Otherwise, grab a tarball from
+[releases](https://github.com/chrisdickinson/ha-ha/releases), pull
+`chrisdickinson/ha-ha` from Docker Hub, or build from source (below).
+
 ## The tools
 
 `ha-ha extract` turns a nomination into a snapshot: the interface's shape at one
@@ -83,3 +99,17 @@ claude plugin install ha-ha@ha-ha
 cargo build
 cargo test
 ```
+
+## Releasing
+
+Conventional commits on `main` drive a
+[release-please](https://github.com/googleapis/release-please) PR. Merging it
+is the only manual step: the PR carries the CHANGELOG, `Cargo.toml`,
+`Cargo.lock`, and both plugin manifests (`.claude-plugin/plugin.json` and the
+marketplace's `metadata.version`) at the new version, and merging it pushes the
+`v*` tag that builds the binaries, cuts the release, pushes the Docker image,
+and rewrites `Formula/ha-ha.rb` in
+[chrisdickinson/homebrew-tap](https://github.com/chrisdickinson/homebrew-tap).
+
+The formula is the one thing not in that PR, and it cannot be: it pins the
+sha256 of tarballs that do not exist until after the tag is pushed.
